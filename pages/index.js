@@ -3,8 +3,8 @@ import {Bar} from 'react-chartjs-2';
 import React, { useState, useEffect } from 'react';
 
 //Função principal. Main que renderiza o html
-export default function Home(props) {  
-  const tipos_produtos = Object.entries(props.data);
+export default function Home({data_q = {"nome" : 12}}) {  
+  const tipos_produtos = Object.entries(data_q);
   const nome_produtos = new Array()
   const quantia_produtos = new Array()
 
@@ -83,12 +83,31 @@ export default function Home(props) {
 }
 
 //Static props: junta os requests necessários para inicialização
-export async function getStaticProps(context) {
+export async function getStaticProps() {
   const query = await fetch(`${process.env.URL}/api/productsTypes`)
-  const data = await query.json()
-
-  return {
-    props: { data }, // manda pra main as necessidades (os props)
+  try {
+    const data_q = await query.json() 
+    if (!data_q) {
+      return {
+        redirect: {
+          destination: '/err',
+          permanent: false,
+        },
+      }
+    }
+  
+    return {
+      props: { 
+        data_q, 
+      } // manda pra main as necessidades (os props)
+    }
+  } catch (error) {
+    const data_q = {}
+    return {
+      props: { 
+        data_q, 
+      } // manda pra main as necessidades (os props)
+    }
   }
 }
 

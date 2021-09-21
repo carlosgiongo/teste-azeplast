@@ -84,7 +84,7 @@ export default function Home({data_q = {"nome" : 12}}) {
 
 //Static props: junta os requests necessários para inicialização
 export async function getStaticProps() {
-  const query = await fetch(`https://teste-azeplast.vercel.app/api/productsTypes`)
+  const query = await fetch(`http://192.168.30.87:3000/api/productsTypes`)
   try {
     const data_q = await query.json() 
     if (!data_q) {
